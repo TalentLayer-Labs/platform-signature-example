@@ -13,6 +13,7 @@ type EnvInfo = {
   PRIVATE_KEY: string;
   AUTOTASK_URL: string;
   ALCHEMY_API_KEY: string;
+  PLATFORM_ID: string;
 };
 
 async function main() {
@@ -20,29 +21,30 @@ async function main() {
     PRIVATE_KEY: privateKey,
     AUTOTASK_URL: autotaskUrl,
     ALCHEMY_API_KEY: alchemyApiKey,
+    PLATFORM_ID: platformId,
   } = process.env as EnvInfo;
 
-  const profileId = 1;
-  const platformId = 3;
-  const cid = "QmUGje8oVhUqy4TcV2NUWeCeZz3s5E3hFXZjrSuVD2YwJy";
+  // Get signer
+  const provider = new JsonRpcProvider(
+    `https://polygon-mumbai.g.alchemy.com/v2/${alchemyApiKey}`
+  );
+  const signer = new Wallet(privateKey, provider);
 
+  // Get platform signature
+  const profileId = 1;
+  const cid = "QmUGje8oVhUqy4TcV2NUWeCeZz3s5E3hFXZjrSuVD2YwJy";
   const res = await axios.post(autotaskUrl, {
     profileId,
     cid,
   });
   const { signature } = JSON.parse(res.data.result);
 
-  const provider = new JsonRpcProvider(
-    `https://polygon-mumbai.g.alchemy.com/v2/${alchemyApiKey}`
-  );
-  const signer = new Wallet(privateKey, provider);
-
+  // Create service
   const talentLayerService = new Contract(
     talentLayerServiceAddress,
     TalentLayerServiceAbi,
     signer
   );
-
   const tx = await talentLayerService.createService(
     profileId,
     platformId,
