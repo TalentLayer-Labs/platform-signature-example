@@ -6,7 +6,7 @@
   "scripts": {
     "build": "tsc",
     "start": "ts-node src/index.ts",
-    "update-code": "defender-autotask update-code 6b73b1f4-7eec-43bf-b0aa-00d6343279bf ./dist/"
+    "update-code": "defender-autotask update-code <YOUR_AUTOTASK_ID> ./dist/"
   },
   "dependencies": {
     "@ethersproject/abstract-signer": "^5.7.0",
