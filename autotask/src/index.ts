@@ -99,11 +99,10 @@ if (require.main === module) {
     autotaskRunId: "local",
     request: {
       body: {
-        method: "createProposal",
+        method: "createService",
         args: {
           profileId: 1,
           cid: "QmUGje8oVhUqy4TcV2NUWeCeZz3s5E3hFXZjrSuVD2YwJy",
-          serviceId: 1,
         },
       },
     },
