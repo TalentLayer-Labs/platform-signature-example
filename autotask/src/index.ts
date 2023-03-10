@@ -9,12 +9,26 @@ import { TalentLayerServiceAbi } from "./abis/talent-layer-service";
 
 const talentLayerServiceAddress = "0x0c698D3509afee201Fd3EC8fdae8f88add54D734";
 
-interface RequestBody {
-  method: "createService" | "createProposal";
+interface CreateServiceArgs {
   profileId: number;
   cid: string;
-  serviceId?: number;
 }
+
+interface CreateProposalArgs {
+  profileId: number;
+  serviceId: number;
+  cid: string;
+}
+
+type RequestBody =
+  | {
+      method: "createService";
+      args: CreateServiceArgs;
+    }
+  | {
+      method: "createProposal";
+      args: CreateProposalArgs;
+    };
 
 type Event = RelayerParams &
   AutotaskEvent & {
@@ -25,7 +39,8 @@ type Event = RelayerParams &
 
 // Entrypoint for the Autotask
 export async function handler(event: Event) {
-  const { profileId, cid, method, serviceId } = event.request?.body || {};
+  const { method, args } = event.request?.body || {};
+  const { profileId, cid } = args || {};
 
   if (!profileId) {
     return {
@@ -50,11 +65,14 @@ export async function handler(event: Event) {
     // Sign message
     signature = await getSignatureForService(signer, profileId, nonce, cid);
   } else if (method === "createProposal") {
+    const { serviceId } = args || {};
+
     if (!serviceId) {
       return {
         error: "serviceId is required",
       };
     }
+
     signature = await getSignatureForProposal(signer, profileId, serviceId, cid);
   } else {
     return {
@@ -87,9 +105,11 @@ if (require.main === module) {
     request: {
       body: {
         method: "createProposal",
-        profileId: 1,
-        cid: "QmUGje8oVhUqy4TcV2NUWeCeZz3s5E3hFXZjrSuVD2YwJy",
-        serviceId: 1,
+        args: {
+          profileId: 1,
+          cid: "QmUGje8oVhUqy4TcV2NUWeCeZz3s5E3hFXZjrSuVD2YwJy",
+          serviceId: 1,
+        },
       },
     },
   })

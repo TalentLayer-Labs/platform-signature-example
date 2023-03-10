@@ -37,8 +37,11 @@ async function main() {
 
   // Get platform signature
   const res = await axios.post(autotaskUrl, {
-    profileId: Number(profileId),
-    cid,
+    method: "createService",
+    args: {
+      profileId: Number(profileId),
+      cid,
+    },
   });
   const { signature } = JSON.parse(res.data.result);
 
