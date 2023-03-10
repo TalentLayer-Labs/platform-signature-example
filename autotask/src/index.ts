@@ -72,7 +72,7 @@ if (require.main === module) {
     request: {
       body: {
         profileId: 1,
-        cid: "ipfs://test",
+        cid: "QmUGje8oVhUqy4TcV2NUWeCeZz3s5E3hFXZjrSuVD2YwJy",
       },
     },
   })
