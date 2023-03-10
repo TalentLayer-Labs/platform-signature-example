@@ -5,6 +5,10 @@ import {
 import { RelayerParams } from "defender-relay-client/lib/relayer";
 import { AutotaskEvent } from "defender-autotask-utils";
 import { getSignatureForService } from "./utils/signature";
+import { Contract } from "ethers";
+import { TalentLayerServiceAbi } from "./abis/talent-layer-service";
+
+const talentLayerServiceAddress = "0x0c698D3509afee201Fd3EC8fdae8f88add54D734";
 
 interface RequestBody {
   profileId: number;
@@ -34,8 +38,22 @@ export async function handler(event: Event) {
   const provider = new DefenderRelayProvider(event);
   const signer = new DefenderRelaySigner(event, provider);
 
-  const signature = await getSignatureForService(signer, profileId, 0, cid);
-  return signature;
+  // Get nonce
+  const talentLayerService = new Contract(
+    talentLayerServiceAddress,
+    TalentLayerServiceAbi,
+    signer
+  );
+  const nonce = await talentLayerService.nonce(profileId);
+
+  // Sign message
+  const signature = await getSignatureForService(signer, profileId, nonce, cid);
+  return {
+    statusCode: 200,
+    data: {
+      signature,
+    },
+  };
 }
 
 // Sample typescript type definitions
