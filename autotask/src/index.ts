@@ -4,14 +4,16 @@ import { AutotaskEvent } from "defender-autotask-utils";
 import { Contract } from "ethers";
 import dotenv from "dotenv";
 
-import { getSignatureForService } from "./utils/signature";
+import { getSignatureForProposal, getSignatureForService } from "./utils/signature";
 import { TalentLayerServiceAbi } from "./abis/talent-layer-service";
 
 const talentLayerServiceAddress = "0x0c698D3509afee201Fd3EC8fdae8f88add54D734";
 
 interface RequestBody {
+  method: "createService" | "createProposal";
   profileId: number;
   cid: string;
+  serviceId?: number;
 }
 
 type Event = RelayerParams &
@@ -23,26 +25,46 @@ type Event = RelayerParams &
 
 // Entrypoint for the Autotask
 export async function handler(event: Event) {
-  const { profileId, cid } = event.request?.body || {};
+  const { profileId, cid, method, serviceId } = event.request?.body || {};
 
-  if (!profileId || !cid)
+  if (!profileId) {
     return {
-      errors: {
-        profileId: "profileId is required",
-        cid: "cid is required",
-      },
+      error: "profileId is required",
     };
+  }
+  if (!cid) {
+    return {
+      error: "cid is required",
+    };
+  }
 
   const provider = new DefenderRelayProvider(event);
   const signer = new DefenderRelaySigner(event, provider);
 
   // Get nonce
   const talentLayerService = new Contract(talentLayerServiceAddress, TalentLayerServiceAbi, signer);
-  const nonce = await talentLayerService.nonce(profileId);
+  let signature: string;
 
-  // Sign message
-  const signature = await getSignatureForService(signer, profileId, nonce, cid);
-  return { signature };
+  if (method === "createService") {
+    const nonce = await talentLayerService.nonce(profileId);
+    // Sign message
+    signature = await getSignatureForService(signer, profileId, nonce, cid);
+  } else if (method === "createProposal") {
+    if (!serviceId) {
+      return {
+        error: "serviceId is required",
+      };
+    }
+    signature = await getSignatureForProposal(signer, profileId, serviceId, cid);
+  } else {
+    return {
+      error: "Invalid method",
+    };
+  }
+
+  return {
+    signature,
+  };
 }
 
 // Sample typescript type definitions
@@ -64,8 +86,10 @@ if (require.main === module) {
     autotaskRunId: "local",
     request: {
       body: {
+        method: "createProposal",
         profileId: 1,
         cid: "QmUGje8oVhUqy4TcV2NUWeCeZz3s5E3hFXZjrSuVD2YwJy",
+        serviceId: 1,
       },
     },
   })
