@@ -14,7 +14,7 @@ const talentLayerServiceAddress = "0x0c698D3509afee201Fd3EC8fdae8f88add54D734";
 type EnvInfo = {
   PRIVATE_KEY: string;
   AUTOTASK_URL: string;
-  ALCHEMY_API_KEY: string;
+  JSON_RPC_URL: string;
   PLATFORM_ID: string;
 };
 
@@ -22,12 +22,12 @@ async function main() {
   const {
     PRIVATE_KEY: privateKey,
     AUTOTASK_URL: autotaskUrl,
-    ALCHEMY_API_KEY: alchemyApiKey,
+    JSON_RPC_URL: jsonRpcUrl,
     PLATFORM_ID: platformId,
   } = process.env as EnvInfo;
 
   // Get signer
-  const provider = new JsonRpcProvider(`https://polygon-mumbai.g.alchemy.com/v2/${alchemyApiKey}`);
+  const provider = new JsonRpcProvider(jsonRpcUrl);
   const signer = new Wallet(privateKey, provider);
 
   // Get service data
