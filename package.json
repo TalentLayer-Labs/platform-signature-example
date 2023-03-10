@@ -1,0 +1,24 @@
+{
+  "name": "oz-defender-autotask-example",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "build": "tsc",
+    "start": "ts-node src/index.ts"
+  },
+  "dependencies": {
+    "@ethersproject/abstract-signer": "^5.7.0",
+    "@ethersproject/strings": "^5.7.0",
+    "defender-autotask-utils": "^1.38.0",
+    "defender-relay-client": "^1.38.0",
+    "ethers": "^5.7.0"
+  },
+  "devDependencies": {
+    "@types/node": "^18.13.0",
+    "defender-autotask-client": "^1.38.0",
+    "dotenv": "^16.0.3",
+    "ts-node": "^10.9.1",
+    "typescript": "^4.9.5"
+  }
+}
