@@ -5,6 +5,7 @@ import {
 import { RelayerParams } from "defender-relay-client/lib/relayer";
 import { AutotaskEvent } from "defender-autotask-utils";
 import { Contract } from "ethers";
+import dotenv from "dotenv";
 
 import { getSignatureForService } from "./utils/signature";
 import { TalentLayerServiceAbi } from "./abis/talent-layer-service";
@@ -59,7 +60,7 @@ type EnvInfo = {
 
 // To run locally (this code will not be executed in Autotasks)
 if (require.main === module) {
-  require("dotenv").config();
+  dotenv.config();
   const { RELAYER_API_KEY: apiKey, RELAYER_API_SECRET: apiSecret } =
     process.env as EnvInfo;
 
