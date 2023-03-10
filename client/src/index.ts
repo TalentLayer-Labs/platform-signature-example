@@ -1,11 +1,13 @@
 import dotenv from "dotenv";
 import { Contract, Wallet, JsonRpcProvider } from "ethers";
-import { TalentLayerServiceAbi } from "./abis/talent-layer-service";
-
 import axios from "axios";
+
+import { TalentLayerServiceAbi } from "./abis/talent-layer-service";
+import { TalentLayerIdAbi } from "./abis/talent-layer-id";
 
 dotenv.config();
 
+const talentLayerIdAddress = "0xd88fd79E55e2d2153EBC121bf2fAa03522B89c62";
 const talentLayerServiceAddress = "0x0c698D3509afee201Fd3EC8fdae8f88add54D734";
 
 // Sample typescript type definitions
@@ -30,11 +32,18 @@ async function main() {
   );
   const signer = new Wallet(privateKey, provider);
 
-  // Get platform signature
-  const profileId = 1;
+  // Get service data
+  const talentLayerId = new Contract(
+    talentLayerIdAddress,
+    TalentLayerIdAbi,
+    provider
+  );
+  const profileId = await talentLayerId.ids(signer.address);
   const cid = "QmUGje8oVhUqy4TcV2NUWeCeZz3s5E3hFXZjrSuVD2YwJy";
+
+  // Get platform signature
   const res = await axios.post(autotaskUrl, {
-    profileId,
+    profileId: Number(profileId),
     cid,
   });
   const { signature } = JSON.parse(res.data.result);
