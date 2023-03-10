@@ -58,12 +58,11 @@ export async function handler(event: Event) {
 
   // Get nonce
   const talentLayerService = new Contract(talentLayerServiceAddress, TalentLayerServiceAbi, signer);
-  let signature: string;
 
   if (method === "createService") {
     const nonce = await talentLayerService.nonce(profileId);
     // Sign message
-    signature = await getSignatureForService(signer, profileId, nonce, cid);
+    return await getSignatureForService(signer, profileId, nonce, cid);
   } else if (method === "createProposal") {
     const { serviceId } = args || {};
 
@@ -73,16 +72,12 @@ export async function handler(event: Event) {
       };
     }
 
-    signature = await getSignatureForProposal(signer, profileId, serviceId, cid);
+    return await getSignatureForProposal(signer, profileId, serviceId, cid);
   } else {
     return {
       error: "Invalid method",
     };
   }
-
-  return {
-    signature,
-  };
 }
 
 // Sample typescript type definitions

@@ -43,7 +43,7 @@ async function main() {
       cid,
     },
   });
-  const { signature } = JSON.parse(res.data.result);
+  const signature = JSON.parse(res.data.result);
 
   // Create service
   const talentLayerService = new Contract(talentLayerServiceAddress, TalentLayerServiceAbi, signer);
