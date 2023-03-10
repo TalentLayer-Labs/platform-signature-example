@@ -4,8 +4,9 @@ import {
 } from "defender-relay-client/lib/ethers";
 import { RelayerParams } from "defender-relay-client/lib/relayer";
 import { AutotaskEvent } from "defender-autotask-utils";
-import { getSignatureForService } from "./utils/signature";
 import { Contract } from "ethers";
+
+import { getSignatureForService } from "./utils/signature";
 import { TalentLayerServiceAbi } from "./abis/talent-layer-service";
 
 const talentLayerServiceAddress = "0x0c698D3509afee201Fd3EC8fdae8f88add54D734";
