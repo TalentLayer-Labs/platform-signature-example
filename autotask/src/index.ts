@@ -1,7 +1,4 @@
-import {
-  DefenderRelayProvider,
-  DefenderRelaySigner,
-} from "defender-relay-client/lib/ethers";
+import { DefenderRelayProvider, DefenderRelaySigner } from "defender-relay-client/lib/ethers";
 import { RelayerParams } from "defender-relay-client/lib/relayer";
 import { AutotaskEvent } from "defender-autotask-utils";
 import { Contract } from "ethers";
@@ -40,11 +37,7 @@ export async function handler(event: Event) {
   const signer = new DefenderRelaySigner(event, provider);
 
   // Get nonce
-  const talentLayerService = new Contract(
-    talentLayerServiceAddress,
-    TalentLayerServiceAbi,
-    signer
-  );
+  const talentLayerService = new Contract(talentLayerServiceAddress, TalentLayerServiceAbi, signer);
   const nonce = await talentLayerService.nonce(profileId);
 
   // Sign message
@@ -61,8 +54,7 @@ type EnvInfo = {
 // To run locally (this code will not be executed in Autotasks)
 if (require.main === module) {
   dotenv.config();
-  const { RELAYER_API_KEY: apiKey, RELAYER_API_SECRET: apiSecret } =
-    process.env as EnvInfo;
+  const { RELAYER_API_KEY: apiKey, RELAYER_API_SECRET: apiSecret } = process.env as EnvInfo;
 
   handler({
     apiKey,

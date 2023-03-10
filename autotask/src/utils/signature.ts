@@ -13,17 +13,15 @@ export const getSignatureForService = async (
   signer: Signer,
   profileId: number,
   nonce: number,
-  cid: string
+  cid: string,
 ): Promise<string> => {
   const messageHash = ethers.utils.solidityKeccak256(
     ["string", "uint256", "string", "uint256", "string"],
-    ["createService", profileId, ";", nonce, cid]
+    ["createService", profileId, ";", nonce, cid],
   );
 
   // Carol the owner of the platform signed the message with her private key
-  const signature = await signer.signMessage(
-    ethers.utils.arrayify(messageHash)
-  );
+  const signature = await signer.signMessage(ethers.utils.arrayify(messageHash));
 
   return signature;
 };
@@ -32,17 +30,15 @@ export const getSignatureForProposal = async (
   signer: Signer,
   profileId: number,
   serviceId: number,
-  cid: string
+  cid: string,
 ): Promise<string> => {
   const messageHash = ethers.utils.solidityKeccak256(
     ["string", "uint256", "string", "uint256", "string"],
-    ["createProposal", profileId, ";", serviceId, cid]
+    ["createProposal", profileId, ";", serviceId, cid],
   );
 
   // Carol the owner of the platform signed the message with her private key
-  const signature = await signer.signMessage(
-    ethers.utils.arrayify(messageHash)
-  );
+  const signature = await signer.signMessage(ethers.utils.arrayify(messageHash));
 
   return signature;
 };

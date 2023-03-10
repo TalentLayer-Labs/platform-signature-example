@@ -27,17 +27,11 @@ async function main() {
   } = process.env as EnvInfo;
 
   // Get signer
-  const provider = new JsonRpcProvider(
-    `https://polygon-mumbai.g.alchemy.com/v2/${alchemyApiKey}`
-  );
+  const provider = new JsonRpcProvider(`https://polygon-mumbai.g.alchemy.com/v2/${alchemyApiKey}`);
   const signer = new Wallet(privateKey, provider);
 
   // Get service data
-  const talentLayerId = new Contract(
-    talentLayerIdAddress,
-    TalentLayerIdAbi,
-    provider
-  );
+  const talentLayerId = new Contract(talentLayerIdAddress, TalentLayerIdAbi, provider);
   const profileId = await talentLayerId.ids(signer.address);
   const cid = "QmUGje8oVhUqy4TcV2NUWeCeZz3s5E3hFXZjrSuVD2YwJy";
 
@@ -49,17 +43,8 @@ async function main() {
   const { signature } = JSON.parse(res.data.result);
 
   // Create service
-  const talentLayerService = new Contract(
-    talentLayerServiceAddress,
-    TalentLayerServiceAbi,
-    signer
-  );
-  const tx = await talentLayerService.createService(
-    profileId,
-    platformId,
-    cid,
-    signature
-  );
+  const talentLayerService = new Contract(talentLayerServiceAddress, TalentLayerServiceAbi, signer);
+  const tx = await talentLayerService.createService(profileId, platformId, cid, signature);
   await tx.wait();
 
   console.log("Hash: ", tx.hash);
