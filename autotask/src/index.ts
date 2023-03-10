@@ -28,7 +28,6 @@ export async function handler(event: Event) {
 
   if (!profileId || !cid)
     return {
-      statusCode: 400,
       errors: {
         profileId: "profileId is required",
         cid: "cid is required",
@@ -48,12 +47,7 @@ export async function handler(event: Event) {
 
   // Sign message
   const signature = await getSignatureForService(signer, profileId, nonce, cid);
-  return {
-    statusCode: 200,
-    data: {
-      signature,
-    },
-  };
+  return { signature };
 }
 
 // Sample typescript type definitions

@@ -5,7 +5,8 @@
   "license": "MIT",
   "scripts": {
     "build": "tsc",
-    "start": "ts-node src/index.ts"
+    "start": "ts-node src/index.ts",
+    "update-code": "defender-autotask update-code 6b73b1f4-7eec-43bf-b0aa-00d6343279bf ./dist/"
   },
   "dependencies": {
     "@ethersproject/abstract-signer": "^5.7.0",
